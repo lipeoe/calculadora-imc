@@ -4,7 +4,7 @@
 
 Felipe Oluwaseun Santos Ojo - RA: 24026245
 
-## Desafios
+## Principais desafios
 
 Modularizar o código de uma maneira que tornasse fácil lidar com as repetições das funcionalidades em diferentes activities.
 
