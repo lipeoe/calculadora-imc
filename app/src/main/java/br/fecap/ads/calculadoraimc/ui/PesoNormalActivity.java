@@ -6,6 +6,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import br.fecap.ads.calculadoraimc.R;
 import br.fecap.ads.calculadoraimc.utils.CloseFunction;
@@ -19,6 +22,12 @@ public class PesoNormalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.peso_normal_activity);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.peso_normal), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+
+        });
 
         setInformacao();
 
@@ -40,9 +49,9 @@ public class PesoNormalActivity extends AppCompatActivity {
         txtClassificacao = findViewById(R.id.classificacao);
 
         txtClassificacao.setText(classificacao);
-        txtPeso.setText("Peso: " + peso);
-        txtAltura.setText("Altura: " + altura);
-        txtImc.setText("IMC: " + imc);
+        txtPeso.setText("Peso: " + peso + "kg");
+        txtAltura.setText("Altura: " + altura + "m");
+        txtImc.setText("IMC: " + imc + "kg/m²");
     }
 
 

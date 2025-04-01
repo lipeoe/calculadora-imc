@@ -1,8 +1,12 @@
 package br.fecap.ads.calculadoraimc.ui;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,11 +41,50 @@ public class CalculoIMCActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.calculo_imc_activity);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.Calculo_imc), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
         });
+
+        btnSet = findViewById(R.id.btnSet);
+
+
+        campoPeso = findViewById(R.id.editTextPeso);
+        campoAltura = findViewById(R.id.editTextAltura);
+
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                btnEnabled();
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        };
+
+        campoPeso.addTextChangedListener(textWatcher);
+        campoAltura.addTextChangedListener(textWatcher);
+    }
+
+    private void btnEnabled(){
+        btnSet = findViewById(R.id.btnSet);
+
+        boolean filled = fieldsfilled();
+
+        btnSet.setEnabled(filled);
+        btnSet.setBackgroundTintList((
+                filled
+                ? ColorStateList.valueOf(Color.parseColor("#00A859"))
+                : ColorStateList.valueOf(Color.parseColor("#B3B3B3"))
+        ));
+    }
+
+    private boolean fieldsfilled(){
+        return !campoAltura.getText().toString().isEmpty() && !campoPeso.getText().toString().isEmpty();
+
     }
 
     public void calculaIMC(View view){
@@ -74,6 +117,7 @@ public class CalculoIMCActivity extends AppCompatActivity {
         String classificacao = "";
 
         Intent intent;
+
         if (numImc < 18.5) {
             // Abaixo do peso
             classificacao = "Abaixo do peso";
@@ -100,10 +144,14 @@ public class CalculoIMCActivity extends AppCompatActivity {
             intent = new Intent(this, Obesidade3Activity.class);
         }
 
-        intent.putExtra(extra_classificacao, classificacao);
-        intent.putExtra(extra_imc, imc);
-        intent.putExtra(extra_altura, altura);
-        intent.putExtra(extra_peso, peso);
+        Bundle bundle = new Bundle();
+
+        bundle.putString(extra_classificacao, classificacao);
+        bundle.putString(extra_imc, imc);
+        bundle.putString(extra_altura, altura);
+        bundle.putString(extra_peso, peso);
+
+        intent.putExtras(bundle);
 
         new Handler().postDelayed(new Runnable() {
             @Override
